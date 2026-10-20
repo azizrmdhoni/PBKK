@@ -1,4 +1,4 @@
-﻿namespace Sibumi.Models;
+namespace Sibumi.Models;
 
 public class User
 {
@@ -6,7 +6,9 @@ public class User
     public string Username { get; set; }
     public string PasswordHash { get; set; }
     public string Nama { get; set; }
-    public string Role { get; set; }
+    public string Role { get; set; } // "Admin", "Petugas", "User"
+    public string NoHp { get; set; }
+    public string NIK { get; set; }
     public bool IsActive { get; set; }
 }
 
@@ -14,6 +16,17 @@ public class Gunung
 {
     public int GunungId { get; set; }
     public string NamaGunung { get; set; }
+    public string Lokasi { get; set; }
+    public int Ketinggian { get; set; }
+    public bool BisaDidaki { get; set; } = true;
+    public string KeteranganStatus { get; set; }
+
+    public string StatusBadge => BisaDidaki ? "Bisa Didaki" : "Ditutup";
+    public string Display => BisaDidaki 
+        ? $"{NamaGunung} ({Ketinggian} mdpl)" 
+        : $"{NamaGunung} ({Ketinggian} mdpl) • Ditutup";
+
+    public override string ToString() => Display;
 }
 
 public class Jalur
@@ -25,7 +38,10 @@ public class Jalur
     public int KuotaHarian { get; set; }
     public decimal TarifPerOrang { get; set; }
     public bool IsActive { get; set; }
+    public bool GunungBisaDidaki { get; set; } = true;
     public string Display => $"{NamaGunung} - {NamaJalur}";
+
+    public override string ToString() => NamaJalur;
 }
 
 public class Booking
@@ -33,6 +49,8 @@ public class Booking
     public int BookingId { get; set; }
     public string KodeBooking { get; set; }
     public int JalurId { get; set; }
+    public int GunungId { get; set; }
+    public string NamaGunung { get; set; }
     public string NamaJalur { get; set; }
     public string NamaKetua { get; set; }
     public string NIK { get; set; }
@@ -44,6 +62,7 @@ public class Booking
     public decimal TotalBiaya { get; set; }
     public string Status { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int? CreatedBy { get; set; }
 
     public Booking Clone() => (Booking)MemberwiseClone();
 }

@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Sibumi.Core;
 using Sibumi.Models;
@@ -10,7 +10,8 @@ public class BookingRepository
     const string SelectSql = @"
         SELECT b.BookingId, b.KodeBooking, b.JalurId, g.NamaGunung + N' - ' + j.NamaJalur,
                b.NamaKetua, b.NIK, b.NoHp, b.Email, b.JumlahAnggota,
-               b.TanggalNaik, b.TanggalTurun, b.TotalBiaya, b.Status, b.CreatedAt
+               b.TanggalNaik, b.TanggalTurun, b.TotalBiaya, b.Status, b.CreatedAt,
+               b.CreatedBy, g.GunungId, g.NamaGunung
         FROM Booking b
         JOIN Jalur j ON j.JalurId = b.JalurId
         JOIN Gunung g ON g.GunungId = j.GunungId";
@@ -30,16 +31,19 @@ public class BookingRepository
         TanggalTurun = r.GetDateTime(10),
         TotalBiaya = r.GetDecimal(11),
         Status = r.GetString(12),
-        CreatedAt = r.GetDateTime(13)
+        CreatedAt = r.GetDateTime(13),
+        CreatedBy = r.IsDBNull(14) ? null : r.GetInt32(14),
+        GunungId = r.GetInt32(15),
+        NamaGunung = r.GetString(16)
     };
 
     public async Task<(List<Booking> Items, int Total)> SearchAsync(string keyword, string status, int page, int pageSize)
     {
         Session.RequireLogin();
         const string filter = @" WHERE (@k = N'' OR b.NamaKetua LIKE N'%' + @k + N'%'
-                                        OR b.KodeBooking LIKE N'%' + @k + N'%'
-                                        OR b.NIK LIKE N'%' + @k + N'%')
-                                   AND (@s = N'' OR b.Status = @s)";
+                                         OR b.KodeBooking LIKE N'%' + @k + N'%'
+                                         OR b.NIK LIKE N'%' + @k + N'%')
+                                    AND (@s = N'' OR b.Status = @s)";
         var sql = $@"SELECT COUNT(*) FROM Booking b{filter};
                      {SelectSql}{filter}
                      ORDER BY b.CreatedAt DESC, b.BookingId DESC

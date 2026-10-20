@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 using Sibumi.Core;
 using Sibumi.Services;
 
@@ -7,7 +7,7 @@ namespace Sibumi.ViewModels;
 public class LoginViewModel : ViewModelBase
 {
     readonly AuthService _auth = new();
-    string _username = "", _password = "", _error;
+    string _username = "petugas", _password = "Petugas#123", _error;
     bool _busy;
 
     public string Username { get => _username; set => Set(ref _username, value); }
@@ -18,6 +18,7 @@ public class LoginViewModel : ViewModelBase
 
     public event Action LoginSucceeded;
     public ICommand LoginCommand { get; }
+    public ICommand QuickFillCommand { get; }
 
     public LoginViewModel()
     {
@@ -37,6 +38,21 @@ public class LoginViewModel : ViewModelBase
                 Error = "Tidak dapat terhubung ke database. Coba lagi nanti.";
             }
             finally { IsBusy = false; }
+        });
+
+        QuickFillCommand = new RelayCommand(p =>
+        {
+            var role = (string)p;
+            if (role == "admin")
+            {
+                Username = "admin";
+                Password = "Admin#123";
+            }
+            else
+            {
+                Username = "petugas";
+                Password = "Petugas#123";
+            }
         });
     }
 }

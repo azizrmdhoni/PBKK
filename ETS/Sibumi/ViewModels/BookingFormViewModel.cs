@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Sibumi.Core;
 using Sibumi.Data;
@@ -12,7 +12,10 @@ public class BookingFormViewModel : ViewModelBase
     readonly JalurRepository _jalurRepo = new();
     readonly Booking _existing;
 
-    List<Jalur> _jalurs = new();
+    List<Gunung> _gunungs = new();
+    Gunung _selectedGunung;
+    List<Jalur> _allJalurs = new();
+    List<Jalur> _filteredJalurs = new();
     Jalur _jalur;
     string _nama = "", _nik = "", _hp = "", _email = "", _jumlah = "1", _error;
     DateTime? _naik = DateTime.Today.AddDays(1), _turun = DateTime.Today.AddDays(2);
@@ -30,8 +33,28 @@ public class BookingFormViewModel : ViewModelBase
         SaveCommand = new AsyncCommand(async _ => await SaveAsync());
     }
 
-    public string Title => _existing == null ? "Booking Baru" : $"Ubah Booking {_existing.KodeBooking}";
-    public List<Jalur> Jalurs { get => _jalurs; private set => Set(ref _jalurs, value); }
+    public string Title => _existing == null ? "Booking Pendakian Baru" : $"Ubah Booking {_existing.KodeBooking}";
+    public List<Gunung> Gunungs { get => _gunungs; private set => Set(ref _gunungs, value); }
+    public Gunung SelectedGunung
+    {
+        get => _selectedGunung;
+        set
+        {
+            if (Set(ref _selectedGunung, value))
+            {
+                OnPropertyChanged(nameof(IsGunungDitutup));
+                OnPropertyChanged(nameof(GunungStatusWarning));
+                UpdateJalursForSelectedGunung();
+            }
+        }
+    }
+
+    public bool IsGunungDitutup => SelectedGunung != null && !SelectedGunung.BisaDidaki;
+    public string GunungStatusWarning => SelectedGunung != null && !SelectedGunung.BisaDidaki
+        ? $"{SelectedGunung.KeteranganStatus}. Pemesanan tiket untuk gunung ini dinonaktifkan."
+        : "";
+
+    public List<Jalur> Jalurs { get => _filteredJalurs; private set => Set(ref _filteredJalurs, value); }
     public Jalur SelectedJalur
     {
         get => _jalur;
@@ -58,17 +81,43 @@ public class BookingFormViewModel : ViewModelBase
 
     public async Task InitAsync()
     {
-        Jalurs = await _jalurRepo.GetAllAsync(activeOnly: true);
-        SelectedJalur = _existing == null
-            ? Jalurs.FirstOrDefault()
-            : Jalurs.FirstOrDefault(j => j.JalurId == _existing.JalurId);
+        Gunungs = await _jalurRepo.GetGunungAsync();
+        _allJalurs = await _jalurRepo.GetAllAsync(activeOnly: false);
+
+        if (_existing != null)
+        {
+            var j = _allJalurs.FirstOrDefault(x => x.JalurId == _existing.JalurId);
+            SelectedGunung = Gunungs.FirstOrDefault(g => g.GunungId == j?.GunungId) ?? Gunungs.FirstOrDefault();
+            SelectedJalur = Jalurs.FirstOrDefault(x => x.JalurId == _existing.JalurId);
+        }
+        else
+        {
+            // Pilih gunung pertama yang BISA DIDAKI secara default
+            SelectedGunung = Gunungs.FirstOrDefault(g => g.BisaDidaki) ?? Gunungs.FirstOrDefault();
+        }
+    }
+
+    void UpdateJalursForSelectedGunung()
+    {
+        if (SelectedGunung == null || !SelectedGunung.BisaDidaki)
+        {
+            Jalurs = new List<Jalur>();
+            SelectedJalur = null;
+        }
+        else
+        {
+            Jalurs = _allJalurs.Where(j => j.GunungId == SelectedGunung.GunungId && j.IsActive).ToList();
+            SelectedJalur = Jalurs.FirstOrDefault();
+        }
     }
 
     bool Validate(out int jumlah)
     {
         var errs = new List<string>();
         jumlah = 0;
-        if (SelectedJalur == null) errs.Add("Pilih jalur pendakian.");
+        if (SelectedGunung == null) errs.Add("Pilih gunung tujuan pendakian.");
+        else if (!SelectedGunung.BisaDidaki) errs.Add($"Gunung {SelectedGunung.NamaGunung} saat ini sedang DITUTUP dan tidak dapat didaki.");
+        if (SelectedJalur == null) errs.Add("Pilih jalur pendakian yang tersedia.");
         if (NamaKetua.Trim().Length < 3) errs.Add("Nama ketua rombongan minimal 3 karakter.");
         if (!Regex.IsMatch(NIK.Trim(), @"^\d{16}$")) errs.Add("NIK harus 16 digit angka.");
         if (!Regex.IsMatch(NoHp.Trim().Replace(" ", ""), @"^(\+62|62|0)8\d{7,12}$")) errs.Add("Nomor HP tidak valid (contoh: 081234567890).");

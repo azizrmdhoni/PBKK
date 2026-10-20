@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Sibumi.Core;
 using Sibumi.Data;
@@ -18,7 +18,11 @@ public class BookingViewModel : ViewModelBase, IPage
 
     public ObservableCollection<Booking> Items { get; } = new();
     public string[] StatusOptions { get; } = { "Semua", "Menunggu", "Dikonfirmasi", "Mendaki", "Selesai", "Dibatalkan" };
+
     public bool IsAdmin => Session.IsAdmin;
+    public string PageHeaderTitle => "Booking";
+    public string PageHeaderSubtitle => "Cari, verifikasi tiket, dan pantau status pendaki.";
+    public string AddButtonText => "Booking Baru";
 
     public string Search { get => _search; set { if (Set(ref _search, value)) _ = ReloadAsync(); } }
     public string Status { get => _status; set { if (Set(ref _status, value)) _ = ReloadAsync(); } }
@@ -73,7 +77,6 @@ public class BookingViewModel : ViewModelBase, IPage
         RefreshCommand = new AsyncCommand(_ => LoadAsync());
     }
 
-    // Tunggu 350 ms setelah user berhenti mengetik, baru query ke database
     async Task ReloadAsync()
     {
         _cts?.Cancel();
@@ -91,6 +94,7 @@ public class BookingViewModel : ViewModelBase, IPage
 
     public async Task LoadAsync()
     {
+        OnPropertyChanged(nameof(IsAdmin));
         var ver = ++_version;
         IsLoading = true;
         try
@@ -98,23 +102,22 @@ public class BookingViewModel : ViewModelBase, IPage
             var (items, total) = await _repo.SearchAsync(Search.Trim(), Status == "Semua" ? "" : Status, _page, PageSize);
             if (ver != _version) return;
 
-            // kalau halaman ini kosong (misalnya habis hapus data terakhir), mundur satu halaman
-            if (items.Count == 0 && total > 0 && _page > 1)
-            {
-                _page--;
-                await LoadAsync();
-                return;
-            }
-
-            _total = total;
             Items.Clear();
             foreach (var b in items) Items.Add(b);
-            Selected = null;
+            _total = total;
             IsEmpty = items.Count == 0;
+            Selected = Items.FirstOrDefault();
             OnPropertyChanged(nameof(PageInfo));
             OnPropertyChanged(nameof(PageLabel));
             OnPropertyChanged(nameof(TotalPages));
         }
-        finally { if (ver == _version) IsLoading = false; }
+        catch (Exception ex)
+        {
+            if (ver == _version) ErrorHandler.Handle(ex);
+        }
+        finally
+        {
+            if (ver == _version) IsLoading = false;
+        }
     }
 }

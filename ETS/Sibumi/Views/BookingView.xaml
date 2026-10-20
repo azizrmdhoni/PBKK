@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Sibumi.Views.BookingView"
+<UserControl x:Class="Sibumi.Views.BookingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Style="{StaticResource Page}">
@@ -18,12 +18,12 @@
             <Button DockPanel.Dock="Right" Style="{StaticResource Primary}" Command="{Binding AddCommand}" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                    <TextBlock Text="Booking Baru"/>
+                    <TextBlock Text="{Binding AddButtonText}"/>
                 </StackPanel>
             </Button>
             <StackPanel>
-                <TextBlock Text="Booking" Style="{StaticResource H1}"/>
-                <TextBlock Text="Cari, konfirmasi, dan pantau status pendaki." Style="{StaticResource Muted}" Margin="0,4,0,0"/>
+                <TextBlock Text="{Binding PageHeaderTitle}" Style="{StaticResource H1}"/>
+                <TextBlock Text="{Binding PageHeaderSubtitle}" Style="{StaticResource Muted}" Margin="0,4,0,0"/>
             </StackPanel>
         </DockPanel>
 
@@ -33,11 +33,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid VerticalAlignment="Top">
-                <TextBox Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Padding="40,0,12,0"/>
+                <TextBox Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Padding="36,0,12,0"/>
                 <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource MutedBrush}"
-                           Margin="14,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                           Margin="12,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
                 <TextBlock Text="Cari kode, nama, atau NIK" Foreground="{DynamicResource MutedBrush}"
-                           Margin="40,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                           Margin="36,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed"/>

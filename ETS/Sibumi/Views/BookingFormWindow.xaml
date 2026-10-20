@@ -1,4 +1,4 @@
-﻿<Window x:Class="Sibumi.Views.BookingFormWindow"
+<Window x:Class="Sibumi.Views.BookingFormWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding Title}" Width="600" Height="760" ResizeMode="NoResize"
@@ -10,7 +10,8 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                     <Button Content="Batal" IsCancel="True" Margin="0,0,8,0"/>
-                    <Button Content="Simpan Booking" Style="{StaticResource Primary}" Command="{Binding SaveCommand}"/>
+                    <Button Content="Simpan Booking" Style="{StaticResource Primary}" Command="{Binding SaveCommand}"
+                            IsEnabled="{Binding IsGunungDitutup, Converter={StaticResource Not}}"/>
                 </StackPanel>
                 <TextBlock Text="Menyimpan..." Style="{StaticResource Muted}" VerticalAlignment="Center"
                            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
@@ -24,10 +25,40 @@
 
                 <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock Text="Jalur dan jadwal" Style="{StaticResource H2}" Margin="0,0,0,16"/>
+                        <TextBlock Text="Destinasi Gunung dan Jadwal" Style="{StaticResource H2}" Margin="0,0,0,16"/>
 
-                        <TextBlock Text="Jalur pendakian" Style="{StaticResource FieldLabel}"/>
-                        <ComboBox ItemsSource="{Binding Jalurs}" SelectedItem="{Binding SelectedJalur}" DisplayMemberPath="Display"/>
+                        <!-- Pemilihan Gunung -->
+                        <TextBlock Text="Pilih Gunung" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding Gunungs}" SelectedItem="{Binding SelectedGunung}" Margin="0,0,0,10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Display}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <!-- Alert Peringatan jika Gunung Ditutup / Tidak Bisa Didaki -->
+                        <Border Margin="0,0,0,14" Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="10" Padding="14,10"
+                                Visibility="{Binding IsGunungDitutup, Converter={StaticResource BoolToVis}}">
+                            <DockPanel>
+                                <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" Foreground="#EF4444" FontSize="15" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                                <StackPanel>
+                                    <TextBlock Text="Gunung ini sedang ditutup" FontWeight="SemiBold" Foreground="#DC2626" FontSize="13"/>
+                                    <TextBlock Text="{Binding GunungStatusWarning}" TextWrapping="Wrap" Foreground="#991B1B" FontSize="12" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+
+                        <!-- Pemilihan Jalur -->
+                        <TextBlock Text="Jalur Pendakian" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding Jalurs}" SelectedItem="{Binding SelectedJalur}"
+                                  IsEnabled="{Binding IsGunungDitutup, Converter={StaticResource Not}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NamaJalur}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <TextBlock Text="{Binding JalurInfo}" Style="{StaticResource Muted}" FontSize="12" Margin="0,6,0,16"/>
 
                         <Grid>

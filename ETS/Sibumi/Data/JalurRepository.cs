@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Sibumi.Core;
 using Sibumi.Models;
@@ -13,10 +13,21 @@ public class JalurRepository
         var list = new List<Gunung>();
         await using var c = Db.Create();
         await c.OpenAsync();
-        await using var cmd = new SqlCommand("SELECT GunungId, NamaGunung FROM Gunung ORDER BY NamaGunung", c);
+        await using var cmd = new SqlCommand(
+            @"SELECT GunungId, NamaGunung, Lokasi, Ketinggian, BisaDidaki, ISNULL(KeteranganStatus, N'')
+              FROM Gunung 
+              ORDER BY BisaDidaki DESC, NamaGunung", c);
         await using var r = await cmd.ExecuteReaderAsync();
         while (await r.ReadAsync())
-            list.Add(new Gunung { GunungId = r.GetInt32(0), NamaGunung = r.GetString(1) });
+            list.Add(new Gunung
+            {
+                GunungId = r.GetInt32(0),
+                NamaGunung = r.GetString(1),
+                Lokasi = r.GetString(2),
+                Ketinggian = r.GetInt32(3),
+                BisaDidaki = r.GetBoolean(4),
+                KeteranganStatus = r.GetString(5)
+            });
         return list;
     }
 
@@ -27,10 +38,10 @@ public class JalurRepository
         await using var c = Db.Create();
         await c.OpenAsync();
         await using var cmd = new SqlCommand(
-            @"SELECT j.JalurId, j.GunungId, g.NamaGunung, j.NamaJalur, j.KuotaHarian, j.TarifPerOrang, j.IsActive
+            @"SELECT j.JalurId, j.GunungId, g.NamaGunung, j.NamaJalur, j.KuotaHarian, j.TarifPerOrang, j.IsActive, g.BisaDidaki
               FROM Jalur j JOIN Gunung g ON g.GunungId = j.GunungId
-              WHERE (@a = 0 OR j.IsActive = 1)
-              ORDER BY g.NamaGunung, j.NamaJalur", c)
+              WHERE (@a = 0 OR (j.IsActive = 1 AND g.BisaDidaki = 1))
+              ORDER BY g.BisaDidaki DESC, g.NamaGunung, j.NamaJalur", c)
             .With("@a", SqlDbType.Bit, activeOnly);
         await using var r = await cmd.ExecuteReaderAsync();
         while (await r.ReadAsync())
@@ -42,9 +53,24 @@ public class JalurRepository
                 NamaJalur = r.GetString(3),
                 KuotaHarian = r.GetInt32(4),
                 TarifPerOrang = r.GetDecimal(5),
-                IsActive = r.GetBoolean(6)
+                IsActive = r.GetBoolean(6),
+                GunungBisaDidaki = r.GetBoolean(7)
             });
         return list;
+    }
+
+    public async Task UpdateGunungStatusAsync(int gunungId, bool bisaDidaki, string keterangan)
+    {
+        Session.RequireAdmin();
+        await using var c = Db.Create();
+        await c.OpenAsync();
+        await using var cmd = new SqlCommand(
+            @"UPDATE Gunung SET BisaDidaki = @b, KeteranganStatus = @k WHERE GunungId = @id;
+              IF @b = 0 UPDATE Jalur SET IsActive = 0 WHERE GunungId = @id;", c)
+            .With("@b", SqlDbType.Bit, bisaDidaki)
+            .With("@k", SqlDbType.NVarChar, keterangan ?? "")
+            .With("@id", SqlDbType.Int, gunungId);
+        await cmd.ExecuteNonQueryAsync();
     }
 
     public async Task SaveAsync(Jalur j)
