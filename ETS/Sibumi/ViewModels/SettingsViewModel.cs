@@ -19,11 +19,12 @@ public class SettingsViewModel : ViewModelBase, IPage
 
     public string Nama => Session.CurrentUser?.Nama;
     public string Username => Session.CurrentUser?.Username;
+    public string Initial => string.IsNullOrEmpty(Nama) ? "?" : Nama.Substring(0, 1).ToUpperInvariant();
     public string Role => Session.CurrentUser?.Role;
 
     public Task LoadAsync()
     {
-        OnPropertyChanged(nameof(Nama)); OnPropertyChanged(nameof(Username)); OnPropertyChanged(nameof(Role));
+        OnPropertyChanged(nameof(Nama)); OnPropertyChanged(nameof(Username)); OnPropertyChanged(nameof(Role)); OnPropertyChanged(nameof(Initial));
         return Task.CompletedTask;
     }
 }
