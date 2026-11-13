@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<rect width="400" height="400" fill="#f5e6d3"/>
+<circle cx="200" cy="200" r="165" fill="#ecd5b8"/>
+<ellipse cx="200" cy="338" rx="118" ry="13" fill="#0f172a" opacity=".10"/>
+
+<path d="M200 118 Q180 90 200 62 M232 118 Q212 90 232 62 M168 118 Q148 92 168 66" fill="none" stroke="#a8a29e" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+<ellipse cx="200" cy="326" rx="132" ry="16" fill="#cbd5e1"/>
+<path d="M286 188 Q342 188 336 240 Q330 280 272 276" fill="none" stroke="#f8fafc" stroke-width="20" stroke-linecap="round"/>
+<path d="M110 160 H290 L268 304 Q265 324 242 324 H158 Q135 324 132 304Z" fill="#f8fafc"/>
+<ellipse cx="200" cy="160" rx="90" ry="16" fill="#78350f"/>
+<rect x="124" y="208" width="152" height="62" fill="#92400e"/>
+<text x="200" y="248" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="26" fill="#fff">KOPI</text>
+</svg>

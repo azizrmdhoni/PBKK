@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<rect width="400" height="400" fill="#fef9c3"/>
+<circle cx="200" cy="200" r="165" fill="#fef08a"/>
+<ellipse cx="200" cy="338" rx="118" ry="13" fill="#0f172a" opacity=".10"/>
+
+<path d="M120 84 L280 84 L294 332 L106 332Z" fill="#f59e0b"/>
+<polygon points="112,58 124,80 136,58 148,80 160,58 172,80 184,58 196,80 208,58 220,80 232,58 244,80 256,58 268,80 280,58 288,84 112,84" fill="#d97706"/>
+<circle cx="200" cy="212" r="66" fill="#fff7ed"/>
+<text x="200" y="206" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="26" fill="#b45309">KERIPIK</text>
+<text x="200" y="236" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="20" fill="#92400e">TEMPE</text>
+<ellipse cx="150" cy="302" rx="16" ry="9" fill="#fcd34d"/><ellipse cx="205" cy="310" rx="18" ry="10" fill="#fde68a"/><ellipse cx="250" cy="300" rx="14" ry="8" fill="#fcd34d"/>
+</svg>

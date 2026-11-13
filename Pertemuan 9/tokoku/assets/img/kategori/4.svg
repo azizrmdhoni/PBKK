@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<rect width="400" height="400" fill="#dbeafe"/>
+<circle cx="200" cy="200" r="165" fill="#bfdbfe"/>
+<ellipse cx="200" cy="338" rx="118" ry="13" fill="#0f172a" opacity=".10"/>
+
+<rect x="80" y="268" width="240" height="56" rx="8" fill="#2563eb"/><rect x="98" y="278" width="214" height="36" rx="4" fill="#f1f5f9"/><rect x="80" y="268" width="16" height="56" rx="6" fill="#1d4ed8"/>
+<rect x="100" y="210" width="200" height="56" rx="8" fill="#f59e0b"/><rect x="118" y="220" width="174" height="36" rx="4" fill="#f1f5f9"/><rect x="100" y="210" width="16" height="56" rx="6" fill="#d97706"/>
+<rect x="90" y="152" width="220" height="56" rx="8" fill="#10b981"/><rect x="108" y="162" width="194" height="36" rx="4" fill="#f1f5f9"/><rect x="90" y="152" width="16" height="56" rx="6" fill="#059669"/>
+<rect x="150" y="34" width="104" height="116" rx="8" fill="#ef4444"/><rect x="150" y="34" width="14" height="116" rx="6" fill="#b91c1c"/>
+<text x="209" y="92" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="30" fill="#fff">CI3</text>
+<path d="M176 108 H240 M176 122 H224" stroke="#fecaca" stroke-width="5" stroke-linecap="round"/>
+</svg>
