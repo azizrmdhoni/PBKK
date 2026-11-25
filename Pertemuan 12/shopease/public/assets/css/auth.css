@@ -1,0 +1,90 @@
+/* ShopEase | Halaman login & registrasi (memakai token dari shopease.css) */
+.auth-body { background: var(--bg-alt); min-height: 100vh; }
+.auth-shell { display: grid; grid-template-columns: minmax(380px, 5fr) 7fr; min-height: 100vh; }
+
+/* ---------- Panel kiri ---------- */
+.auth-aside {
+    position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 2.5rem;
+    padding: 2.5rem 3.25rem; color: #cbd5e1; overflow: hidden;
+    background:
+        radial-gradient(70% 55% at 100% 0%, rgba(99, 102, 241, .45), transparent 65%),
+        radial-gradient(50% 40% at 0% 100%, rgba(249, 115, 22, .16), transparent 70%),
+        var(--dark);
+}
+.auth-aside .se-brand { color: #fff; }
+.auth-aside .se-brand span:not(.se-brand-mark) { color: #a5b4fc; }
+.auth-aside h2 { color: #fff; font-size: clamp(1.9rem, 2.8vw, 2.5rem); line-height: 1.15; max-width: 16ch; margin-bottom: .9rem; }
+.auth-lead { max-width: 34ch; color: #94a3b8; font-size: 1.02rem; }
+.auth-points { margin: 2rem 0 0; padding: 0; display: grid; gap: 1.1rem; }
+.auth-points li { display: flex; gap: .9rem; align-items: flex-start; }
+.auth-points i {
+    flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px;
+    background: rgba(255, 255, 255, .08); color: #c7d2fe; font-size: 1.1rem;
+}
+.auth-points strong { display: block; color: #fff; font-size: .98rem; }
+.auth-points span { display: block; font-size: .86rem; color: #94a3b8; line-height: 1.5; }
+.auth-aside-foot { color: #64748b; }
+
+/* ---------- Sisi form ---------- */
+.auth-main { display: flex; flex-direction: column; padding: 1.5rem clamp(1rem, 4vw, 3rem) 2.5rem; }
+.auth-top { text-align: right; font-weight: 600; font-size: .92rem; }
+.auth-top a { color: var(--muted); }
+.auth-top a:hover { color: var(--brand); }
+.auth-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding-top: 1rem; }
+.auth-brand-mobile { display: none !important; }
+
+.auth-card {
+    width: 100%; max-width: 440px; background: #fff; border: 1px solid var(--line);
+    border-radius: 22px; padding: 2.25rem 2rem; box-shadow: var(--shadow-md);
+}
+.auth-title { font-size: 1.65rem; margin: 0 0 .35rem; }
+.auth-sub { color: var(--muted); margin-bottom: 1.6rem; }
+.auth-sub a { font-weight: 700; }
+.auth-card .alert { border-radius: 12px; font-size: .92rem; padding: .7rem .9rem; }
+
+/* ---------- Field ---------- */
+.se-field { margin-bottom: 1.1rem; }
+.se-field label { display: block; font-weight: 700; font-size: .88rem; color: var(--ink); margin-bottom: .4rem; }
+.se-opt { font-weight: 500; color: var(--muted); }
+
+.se-input {
+    display: flex; align-items: center; gap: .6rem; height: 3rem; padding: 0 .85rem;
+    background: #fff; border: 1.5px solid var(--line); border-radius: 12px;
+    transition: border-color .15s, box-shadow .15s;
+}
+.se-input > i { color: var(--muted); font-size: 1.05rem; }
+.se-input input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; }
+.se-input input::placeholder { color: #94a3b8; }
+.se-input:hover { border-color: #c7d2fe; }
+.se-input:focus-within { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(79, 70, 229, .14); }
+.se-input:focus-within > i { color: var(--brand); }
+.se-input.is-invalid { border-color: #dc2626; }
+.se-input.is-invalid:focus-within { box-shadow: 0 0 0 4px rgba(220, 38, 38, .12); }
+.se-eye { border: 0; background: transparent; color: var(--muted); padding: .35rem; border-radius: 8px; line-height: 1; cursor: pointer; }
+.se-eye:hover { color: var(--brand); background: var(--brand-50); }
+.se-error { color: #b91c1c; font-size: .85rem; font-weight: 500; margin: .4rem 0 0; }
+
+/* Syarat password */
+.pw-rules { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: .6rem 0 0; padding: 0; font-size: .82rem; color: var(--muted); }
+.pw-rules li { display: inline-flex; align-items: center; gap: .35rem; }
+.pw-rules li.ok { color: #15803d; font-weight: 600; }
+
+/* Akun uji (development) */
+.demo-box { margin-top: 1.6rem; padding: 1rem; border: 1.5px dashed #c7d2fe; border-radius: 14px; background: var(--brand-50); }
+.demo-head { font-weight: 700; font-size: .85rem; color: var(--brand-600); margin-bottom: .6rem; }
+.demo-head span { font-weight: 500; color: var(--muted); margin-left: .25rem; }
+.demo-row { display: flex; align-items: center; gap: .6rem; padding: .3rem 0; font-size: .85rem; }
+.demo-row code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--ink); background: transparent; }
+.demo-fill { border: 1px solid #c7d2fe; background: #fff; color: var(--brand); font-weight: 700; font-size: .78rem; padding: .2rem .7rem; border-radius: 8px; cursor: pointer; }
+.demo-fill:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+/* ---------- Responsif ---------- */
+@media (max-width: 991.98px) {
+    .auth-shell { grid-template-columns: 1fr; }
+    .auth-aside { display: none; }
+    .auth-brand-mobile { display: inline-flex !important; }
+    .auth-top { text-align: left; }
+}
+@media (max-width: 480px) {
+    .auth-card { padding: 1.6rem 1.15rem; border-radius: 18px; }
+}
